@@ -1,0 +1,66 @@
+# SPDX-License-Identifier: GPL-2.0+
+#
+# Copyright (C) 2020-2022 Texas Instruments Incorporated - https://www.ti.com/
+#	Suman Anna <s-anna@ti.com>
+# Copyright (C) 2023 Variscite Ltd. - https://www.variscite.com/
+
+
+choice
+	prompt "Variscite TI K3 AM62x based boards"
+	optional
+
+config TARGET_AM62X_VAR_SOM_A53
+	bool "Varisite VAR-SOM-AM62 running on A53"
+	select ARM64
+	select SOC_K3_AM625
+	imply BOARD
+	imply SPL_BOARD
+	imply TI_I2C_BOARD_DETECT
+
+config TARGET_AM62X_VAR_SOM_R5
+	bool "Varisite VAR-SOM-AM62 running on R5"
+	select CPU_V7R
+	select SYS_THUMB_BUILD
+	select K3_LOAD_SYSFW
+	select SOC_K3_AM625
+	select RAM
+	select SPL_RAM
+	select K3_DDRSS
+	select K3_DDRSS_BOARD_ADJUST
+	imply SYS_K3_SPL_ATF
+	imply TI_I2C_BOARD_DETECT
+
+endchoice
+
+if TARGET_AM62X_VAR_SOM_A53
+
+config SYS_BOARD
+       default "am62x_var_som"
+
+config SYS_VENDOR
+       default "variscite"
+
+config SYS_CONFIG_NAME
+       default "am62x_var_som"
+
+source "board/ti/common/Kconfig"
+
+endif
+
+if TARGET_AM62X_VAR_SOM_R5
+
+config SYS_BOARD
+       default "am62x_var_som"
+
+config SYS_VENDOR
+       default "variscite"
+
+config SYS_CONFIG_NAME
+       default "am62x_var_som"
+
+config SPL_LDSCRIPT
+	default "arch/arm/mach-omap2/u-boot-spl.lds"
+
+source "board/ti/common/Kconfig"
+
+endif
