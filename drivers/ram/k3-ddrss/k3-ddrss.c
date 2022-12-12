@@ -501,6 +501,28 @@ void populate_data_array_from_dt(struct k3_ddrss_desc *ddrss,
 		reginit_data->phy_regs_offs[i] = i;
 }
 
+#if CONFIG_K3_DDRSS_BOARD_ADJUST
+__weak void board_k3_adjust_ddr_freq(u32 * ddr_freq1, u32 * ddr_freq2,
+				 u32 * ddr_fhs_cnt)
+{
+}
+
+__weak void board_k3_adjust_ddr_ctl_regs(u32 * regvalues, u16 * regnum,
+				 const u16 regcount )
+{
+}
+
+__weak void board_k3_adjust_ddr_pi_regs(u32 * regvalues, u16 * regnum,
+				 const u16 regcount )
+{
+}
+
+__weak void board_k3_adjust_ddr_phy_regs(u32 * regvalues, u16 * regnum,
+				 const u16 regcount )
+{
+}
+#endif
+
 void k3_lpddr4_hardware_reg_init(struct k3_ddrss_desc *ddrss)
 {
 	uint32_t status = 0U;
@@ -509,6 +531,17 @@ void k3_lpddr4_hardware_reg_init(struct k3_ddrss_desc *ddrss)
 	lpddr4_privatedata *pd = &ddrss->pd;
 
 	populate_data_array_from_dt(ddrss, &reginitdata);
+
+#if CONFIG_K3_DDRSS_BOARD_ADJUST
+	/* Allow board to override dt configuration */
+	board_k3_adjust_ddr_freq(&ddrss->ddr_freq1, &ddrss->ddr_freq2, &ddrss->ddr_fhs_cnt);
+	board_k3_adjust_ddr_ctl_regs(reginitdata.ctl_regs, reginitdata.ctl_regs_offs,
+					  LPDDR4_INTR_CTL_REG_COUNT);
+	board_k3_adjust_ddr_pi_regs(reginitdata.pi_regs, reginitdata.pi_regs_offs,
+					  LPDDR4_INTR_PHY_INDEP_REG_COUNT);
+	board_k3_adjust_ddr_phy_regs(reginitdata.phy_regs, reginitdata.phy_regs_offs,
+					  LPDDR4_INTR_PHY_REG_COUNT);
+#endif
 
 	status = driverdt->writectlconfig(pd, reginitdata.ctl_regs,
 					  reginitdata.ctl_regs_offs,

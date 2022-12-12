@@ -58,6 +58,15 @@ config K3_DDRSS
 	bool "Enable K3 DDRSS support"
 	depends on RAM
 
+config K3_DDRSS_BOARD_ADJUST
+	bool "Enable board file override of ddr timing"
+	default n
+	---help---
+	K3_DDRSS is configured by device tree by default. This option enables
+	configuration override by board file, which may be desirable for machines
+	storing DDR timing in EEPROM. Board functions are called after device
+	tree configuration is applied.
+
 choice
 	depends on K3_DDRSS
 	prompt "K3 DDRSS Arch Support"
