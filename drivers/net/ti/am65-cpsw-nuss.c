@@ -21,9 +21,12 @@
 #include <net.h>
 #include <phy.h>
 #include <power-domain.h>
+#include <power/regulator.h>
 #include <soc.h>
 #include <linux/bitops.h>
 #include <linux/soc/ti/ti-udma.h>
+#include <asm-generic/gpio.h>
+#include <linux/delay.h>
 
 #include "cpsw_mdio.h"
 
@@ -130,6 +133,14 @@ struct am65_cpsw_priv {
 	u32			phy_addr;
 
 	bool			mdio_manual_mode;
+#ifdef CONFIG_DM_REGULATOR
+	struct udevice		*phy_supply;
+#endif
+#if CONFIG_IS_ENABLED(DM_GPIO)
+	struct gpio_desc phy_reset_gpio;
+	uint32_t reset_delay;
+	uint32_t reset_post_delay;
+#endif
 };
 
 #ifdef PKTSIZE_ALIGN
@@ -666,6 +677,21 @@ out:
 	return ret;
 }
 
+#if CONFIG_IS_ENABLED(DM_GPIO)
+/* CPSW GPIO reset */
+static void am65_cpsw_gpio_reset(struct am65_cpsw_priv *priv)
+{
+	debug("am65_cpsw_gpio_reset: am65_cpsw_gpio_reset(dev)\n");
+	if (dm_gpio_is_valid(&priv->phy_reset_gpio)) {
+		dm_gpio_set_value(&priv->phy_reset_gpio, 1);
+		mdelay(priv->reset_delay);
+		dm_gpio_set_value(&priv->phy_reset_gpio, 0);
+		if (priv->reset_post_delay)
+			mdelay(priv->reset_post_delay);
+	}
+}
+#endif
+
 static int am65_cpsw_port_probe(struct udevice *dev)
 {
 	struct am65_cpsw_priv *priv = dev_get_priv(dev);
@@ -673,6 +699,43 @@ static int am65_cpsw_port_probe(struct udevice *dev)
 	struct am65_cpsw_common *cpsw_common;
 	char portname[15];
 	int ret;
+
+#ifdef CONFIG_DM_REGULATOR
+	device_get_supply_regulator(dev, "phy-supply", &priv->phy_supply);
+
+	if (priv->phy_supply) {
+		ret = regulator_set_enable(priv->phy_supply, true);
+		if (ret) {
+			printf("%s: Error enabling phy supply\n", dev->name);
+			return ret;
+		}
+	}
+#endif
+
+#if CONFIG_IS_ENABLED(DM_GPIO)
+	/* property is optional, don't return error! */
+	ret = gpio_request_by_name(dev, "phy-reset-gpios", 0,
+				   &priv->phy_reset_gpio, GPIOD_IS_OUT);
+	if (ret == 0) {
+		priv->reset_delay = dev_read_u32_default(dev, "phy-reset-duration", 1);
+		if (priv->reset_delay > 1000) {
+			printf("phy reset duration should be <= 1000ms\n");
+			/* property value wrong, use default value */
+			priv->reset_delay = 1;
+		}
+
+		priv->reset_post_delay = dev_read_u32_default(dev,
+							      "phy-reset-post-delay",
+							      0);
+		if (priv->reset_post_delay > 1000) {
+			printf("phy reset post delay should be <= 1000ms\n");
+			/* property value wrong, use default value */
+			priv->reset_post_delay = 0;
+		}
+
+		am65_cpsw_gpio_reset(priv);
+	}
+#endif
 
 	priv->dev = dev;
 
