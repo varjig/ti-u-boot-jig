@@ -249,10 +249,10 @@ int var_eeprom_ddr_table_is_valid(struct var_eeprom *ep)
 static void var_eeprom_adjust_ddr_u32(const char * name, const u32 * ep_val, u32 * dt_val) {
 	if (*ep_val != *dt_val)
 	{
-		printf("%s: adjusting %s from %d to %d\n", __func__, name, *dt_val, *ep_val);
+		debug("%s: adjusting %s from %d to %d\n", __func__, name, *dt_val, *ep_val);
 		*dt_val = *ep_val;
 	} else {
-		printf("%s: %s no change (%d)\n", __func__, name, *dt_val);
+		debug("%s: %s no change (%d)\n", __func__, name, *dt_val);
 	}
 }
 
@@ -294,7 +294,7 @@ void var_eeprom_adjust_ddr_regs(const char * name, u32 * regvalues, u16 * regnum
 	struct var_eeprom *ep = VAR_EEPROM_DATA;
 	struct udevice *dev;
 
-	printf("%s: Adjusting %s table\n", __func__, name);
+	debug("%s: Adjusting %s table\n", __func__, name);
 
 	if (!var_eeprom_ddr_table_is_valid(ep)) {
 		printf("%s: Error: ddr table is not valid\n", __func__);
