@@ -278,7 +278,7 @@ static void am65_cpsw_gmii_sel_k3(struct am65_cpsw_priv *priv,
 		break;
 	};
 
-	if (rgmii_id)
+	if (!rgmii_id)
 		mode |= AM65_GMII_SEL_RGMII_IDMODE;
 
 	reg = mode;
