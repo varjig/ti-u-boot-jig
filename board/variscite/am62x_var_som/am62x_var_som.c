@@ -156,7 +156,7 @@ void set_bootdevice_env(void) {
 #define SDRAM_SIZE_STR_LEN 5
 
 /* configure AUDIO_EXT_REFCLK1 pin as an output*/
-static void audio_refclk1_ctrl_clkout_en() {
+static void audio_refclk1_ctrl_clkout_en(void) {
 	volatile uint32_t *audio_refclk1_ctrl_ptr = (volatile uint32_t *)0x001082E4;
 	uint32_t audio_refclk1_ctrl_val = *audio_refclk1_ctrl_ptr;
 	audio_refclk1_ctrl_val |= (1 << 15);
