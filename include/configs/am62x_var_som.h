@@ -15,6 +15,7 @@
 #include <environment/ti/k3_dfu.h>
 #include <environment/ti/k3_rproc.h>
 
+
 /* DDR Configuration */
 #define CONFIG_VERY_BIG_RAM
 #define CONFIG_MAX_MEM_MAPPED 0x80000000
@@ -171,7 +172,7 @@
 
 /* U-Boot general configuration */
 #define EXTRA_ENV_AM625_BOARD_SETTINGS					\
-	"default_device_tree=" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0"	\
+	"default_device_tree=k3-am625-var-som-jig.dtb\0"	\
 	"findfdt="							\
 		"setenv name_fdt ${default_device_tree};"		\
 		"setenv fdtfile ${name_fdt}\0"				\
@@ -375,6 +376,7 @@
 
 #define BOOTENV_DEV_LINUX(devtypeu, devtypel, instance) \
 	"bootcmd_linux=" \
+		"i2c dev 2; i2c probe;" \
 		"if test \"${android_boot}\" -eq 0; then;" \
 			"run findfdt; run envboot; run init_${boot}; run boot_rprocs;" \
 			"if test ${boot_fit} -eq 1; then;" \
