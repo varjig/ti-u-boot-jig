@@ -11,7 +11,7 @@
 #include <cpu_func.h>
 #include <u-boot/crc.h>
 #include <asm/arch/hardware.h>
-
+#include <linux/delay.h>
 #include "am62x_eeprom.h"
 
 int var_eeprom_is_valid(struct var_eeprom *ep)
@@ -293,6 +293,23 @@ void var_eeprom_adjust_ddr_regs(const char * name, u32 * regvalues, u16 * regnum
 	u8 adj_table_size[DRAM_TABLE_NUM];
 	struct var_eeprom *ep = VAR_EEPROM_DATA;
 	struct udevice *dev;
+	static int erase_flag=-1;
+
+	if(erase_flag==-1)
+	{
+		erase_flag=0;
+		puts("Do you want to erase EEPROM?[Y/N]\n");
+		mdelay(1000);
+		if(tstc()!=0)
+			if(getchar()=='Y')
+			{
+				printf("Erasing EEPROM\n");
+				erase_flag=1;
+			}
+	}
+
+	if(erase_flag==1)
+	        return;
 
 	debug("%s: Adjusting %s table\n", __func__, name);
 
