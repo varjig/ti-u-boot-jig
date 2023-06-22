@@ -50,6 +50,7 @@
 		states = <1800000 0x0>,
 			 <3300000 0x1>;
 	};
+
 };
 
 &cpsw3g_mdio {
@@ -75,6 +76,7 @@
 	clock-frequency = <400000>;
 };
 
+
 &main_i2c2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_i2c2_pins_default>;
@@ -87,10 +89,18 @@
 		gpio-controller;
 		#gpio-cells = <2>;
 		status = "okay";
+
+		RGB_latch {
+				gpio-hog;
+                gpios = <4 GPIO_ACTIVE_HIGH>;
+                output-high;
+                line-name = "RGB_latch";
+        };
 	};
 };
 
 &main_pmx0 {
+
 	main_i2c0_pins_default: main-i2c0-pins-default {
 		pinctrl-single,pins = <
 			AM62X_IOPAD(0x1e0, PIN_INPUT_PULLUP, 0) /* (B16) I2C0_SCL */
@@ -142,8 +152,6 @@
 			AM62X_IOPAD(0x0258, PIN_OUTPUT, 0) /* (F18) USB1_DRVVBUS */
 		>;
 	};
-
-
 
 	vdd_sd_dv_pins_default: vdd-sd-dv-pins-default {
 		pinctrl-single,pins = <

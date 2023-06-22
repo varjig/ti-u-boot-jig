@@ -375,6 +375,7 @@
 
 #define BOOTENV_DEV_LINUX(devtypeu, devtypel, instance) \
 	"bootcmd_linux=" \
+		"i2c dev 2; i2c probe;" \
 		"if test \"${android_boot}\" -eq 0; then;" \
 			"run findfdt; run envboot; run init_${boot}; run boot_rprocs;" \
 			"if test ${boot_fit} -eq 1; then;" \
