@@ -148,8 +148,7 @@ void var_eeprom_print_prod_info(struct var_eeprom *ep)
 	memcpy(partnum, ep->partnum, sizeof(ep->partnum));
 
 	/* Read second part of P/N  */
-	if (ep->version >= 3)
-		memcpy(partnum + sizeof(ep->partnum), ep->partnum2, sizeof(ep->partnum2));
+	memcpy(partnum + sizeof(ep->partnum), ep->partnum2, sizeof(ep->partnum2));
 
 	printf("\nPart number: VSM-AM62-%.*s\n", (int)sizeof(partnum), partnum);
 	printf("Assembly: AS%.*s\n", (int)sizeof(ep->assembly), (char *)ep->assembly);
