@@ -165,7 +165,7 @@ void var_eeprom_print_prod_info(struct var_eeprom *ep)
 		ep->mac[0], ep->mac[1], ep->mac[2], ep->mac[3], ep->mac[4], ep->mac[5]);
 	debug("EEPROM version: 0x%x\n", ep->version);
 	debug("SOM features: 0x%x\n", ep->features);
-	printf("SOM revision: 0x%x\n", ep->somrev);
+	printf("SOM revision: %d.%d\n", SOMREV_MAJOR(ep->somrev), SOMREV_MINOR(ep->somrev));
 	if (ep->dramsize < 8)
 		printf("DRAM size: %d MiB\n", ep->dramsize * 128);
 	else
