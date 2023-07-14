@@ -13,6 +13,9 @@ obj-$(CONFIG_SOC_K3_J722S) += j722s/
 obj-$(CONFIG_ARM64) += arm64-mmu.o
 obj-$(CONFIG_CPU_V7R) += r5_mpu.o lowlevel_init.o
 obj-$(CONFIG_ARM64) += cache.o
+ifeq ($(CONFIG_OF_LIBFDT)$(CONFIG_OF_SYSTEM_SETUP),yy)
+obj-$(CONFIG_SOC_K3_AM625) += am625_fdt.o
+endif
 ifeq ($(CONFIG_SPL_BUILD),y)
 obj-$(CONFIG_SOC_K3_AM654) += am654_init.o
 obj-$(CONFIG_SOC_K3_J721E) += j721e_init.o
