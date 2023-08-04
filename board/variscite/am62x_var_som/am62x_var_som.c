@@ -69,6 +69,37 @@ int dram_init_banksize(void)
 	return var_dram_init_banksize();
 }
 
+/*
+ * Prevent relocation from stomping reserved memory in FDT
+ */
+ulong board_get_usable_ram_top(ulong total_size)
+{
+#if defined(CONFIG_SYS_SDRAM_BASE) && CONFIG_SYS_SDRAM_BASE > 0
+	/*
+	 * Detect whether we have so much RAM that it goes past the end of our
+	 * 32-bit address space. If so, clip the usable RAM so it doesn't.
+	 */
+	if (gd->ram_top < CONFIG_SYS_SDRAM_BASE)
+		/*
+		 * Will wrap back to top of 32-bit space when reservations
+		 * are made.
+		 */
+		return 0;
+#endif
+
+	/* Check if gd->ram_size is 512MB or less. */
+	if (gd->ram_size <= SZ_512M) {
+		/*
+		 * Return 0x5000000 less than gd->ram_top to leave room for tfa,
+		 * op-tee, r5, etc. reserved memory nodes in the device tree from
+		 * 0x9C000000 to 0x9FFFFFFF
+		 */
+		return gd->ram_top - (0x5000000);
+	}
+
+	return gd->ram_top;
+}
+
 #if defined(CONFIG_SPL_LOAD_FIT)
 int board_fit_config_name_match(const char *name)
 {
