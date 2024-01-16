@@ -246,13 +246,13 @@ out:
 #define AM65_GMII_SEL_MODE_SGMII	3
 
 #define AM65_GMII_SEL_RGMII_IDMODE	BIT(4)
+#define AM6X_GMII_SEL_MODE_SEL_MASK	GENMASK(2, 0)
 
 static int am65_cpsw_gmii_sel_k3(struct am65_cpsw_priv *priv,
 				 phy_interface_t phy_mode)
 {
 	struct udevice *dev = priv->dev;
 	u32 offset, reg, phandle;
-	bool rgmii_id = false;
 	fdt_addr_t gmii_sel;
 	u32 mode = 0;
 	ofnode node;
@@ -292,7 +292,6 @@ static int am65_cpsw_gmii_sel_k3(struct am65_cpsw_priv *priv,
 	case PHY_INTERFACE_MODE_RGMII_ID:
 	case PHY_INTERFACE_MODE_RGMII_TXID:
 		mode = AM65_GMII_SEL_MODE_RGMII;
-		rgmii_id = true;
 		break;
 
 	case PHY_INTERFACE_MODE_SGMII:
@@ -309,15 +308,16 @@ static int am65_cpsw_gmii_sel_k3(struct am65_cpsw_priv *priv,
 		break;
 	};
 
-	if (rgmii_id)
-		mode |= AM65_GMII_SEL_RGMII_IDMODE;
+	/* RGMII_ID_MODE = 1 is not supported */
+	reg &= ~AM65_GMII_SEL_RGMII_IDMODE;
+	reg &= ~AM6X_GMII_SEL_MODE_SEL_MASK;
+	reg |= mode;
 
-	reg = mode;
 	dev_dbg(dev, "gmii_sel PHY mode: %u, new gmii_sel: %08x\n",
 		phy_mode, reg);
 	writel(reg, gmii_sel);
 
-	reg = readl(gmii_sel);
+	reg = AM6X_GMII_SEL_MODE_SEL_MASK & readl(gmii_sel);
 	if (reg != mode) {
 		dev_err(dev,
 			"gmii_sel PHY mode NOT SET!: requested: %08x, gmii_sel: %08x\n",
