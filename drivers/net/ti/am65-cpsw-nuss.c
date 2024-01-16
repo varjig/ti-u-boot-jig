@@ -239,6 +239,7 @@ out:
 #define AM65_GMII_SEL_MODE_RGMII	2
 
 #define AM65_GMII_SEL_RGMII_IDMODE	BIT(4)
+#define AM6X_GMII_SEL_MODE_SEL_MASK	GENMASK(2, 0)
 
 static void am65_cpsw_gmii_sel_k3(struct am65_cpsw_priv *priv,
 				  phy_interface_t phy_mode, int slave)
@@ -246,7 +247,6 @@ static void am65_cpsw_gmii_sel_k3(struct am65_cpsw_priv *priv,
 	struct am65_cpsw_common	*common = priv->cpsw_common;
 	u32 reg;
 	u32 mode = 0;
-	bool rgmii_id = false;
 
 	reg = readl(common->gmii_sel);
 
@@ -265,7 +265,6 @@ static void am65_cpsw_gmii_sel_k3(struct am65_cpsw_priv *priv,
 	case PHY_INTERFACE_MODE_RGMII_ID:
 	case PHY_INTERFACE_MODE_RGMII_TXID:
 		mode = AM65_GMII_SEL_MODE_RGMII;
-		rgmii_id = true;
 		break;
 
 	default:
@@ -278,15 +277,16 @@ static void am65_cpsw_gmii_sel_k3(struct am65_cpsw_priv *priv,
 		break;
 	};
 
-	if (rgmii_id)
-		mode |= AM65_GMII_SEL_RGMII_IDMODE;
+	/* RGMII_ID_MODE = 1 is not supported */
+	reg &= ~AM65_GMII_SEL_RGMII_IDMODE;
+	reg &= ~AM6X_GMII_SEL_MODE_SEL_MASK;
+	reg |= mode;
 
-	reg = mode;
 	dev_dbg(common->dev, "gmii_sel PHY mode: %u, new gmii_sel: %08x\n",
 		phy_mode, reg);
 	writel(reg, common->gmii_sel);
 
-	reg = readl(common->gmii_sel);
+	reg = AM6X_GMII_SEL_MODE_SEL_MASK & readl(common->gmii_sel);
 	if (reg != mode)
 		dev_err(common->dev,
 			"gmii_sel PHY mode NOT SET!: requested: %08x, gmii_sel: %08x\n",
