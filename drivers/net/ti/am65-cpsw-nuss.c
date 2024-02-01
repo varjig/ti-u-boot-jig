@@ -234,6 +234,14 @@ out:
 	return phy->link;
 }
 
+static bool a65_cpsw_brd_has_rgmii_id_quirk(void)
+{
+	if (env_get("var_rgmii_id_quirk"))
+		return true;
+
+	return false;
+}
+
 #define AM65_GMII_SEL_MODE_MII		0
 #define AM65_GMII_SEL_MODE_RMII		1
 #define AM65_GMII_SEL_MODE_RGMII	2
@@ -281,6 +289,9 @@ static void am65_cpsw_gmii_sel_k3(struct am65_cpsw_priv *priv,
 	reg &= ~AM65_GMII_SEL_RGMII_IDMODE;
 	reg &= ~AM6X_GMII_SEL_MODE_SEL_MASK;
 	reg |= mode;
+
+	if (a65_cpsw_brd_has_rgmii_id_quirk())
+		reg |= AM65_GMII_SEL_RGMII_IDMODE;
 
 	dev_dbg(common->dev, "gmii_sel PHY mode: %u, new gmii_sel: %08x\n",
 		phy_mode, reg);
