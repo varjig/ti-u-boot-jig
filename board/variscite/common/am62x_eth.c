@@ -2,8 +2,8 @@
 #include <net.h>
 #include <miiphy.h>
 #include <env.h>
+#include "am62x_eth.h"
 
-#include "../common/am62x_eeprom.h"
 
 #define CHAR_BIT 8
 
@@ -109,6 +109,19 @@ int var_setup_mac(struct var_eeprom *eeprom)
 	int2mac(addr + 1, enet1addr);
 	var_eth_env_set_enetaddr(1, enet1addr);
 #endif
+
+	return 0;
+}
+
+int var_eth_get_rgmii_id_quirk(struct var_eeprom *ep)
+{
+	flush_dcache_all();
+
+	if (!var_eeprom_is_valid(ep))
+		return -1;
+
+	env_set("var_rgmii_id_quirk", (ep->features & VAR_EEPROM_F_ETH_HW_DLY) ?
+		 NULL : "phy-gmii-sel.var_rgmii_id_quirk\\=1");
 
 	return 0;
 }
