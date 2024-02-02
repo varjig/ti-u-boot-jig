@@ -19,6 +19,9 @@
 #define VAR_EEPROM_F_WIFI		BIT(0)
 #define VAR_EEPROM_F_ETH		BIT(1)
 #define VAR_EEPROM_F_AUDIO		BIT(2)
+#define VAR_EEPROM_F_ETH_HW_DLY		BIT(3)	/* PCBA RGMII TX_CLK Delay Filter
+						 * 0 = Assembled, 1 = Not Assembled
+						 */
 
 /* Helpers to extract the major and minor versions from somrev */
 #define SOMREV_MINOR(val) ((val) & GENMASK(4, 0))
