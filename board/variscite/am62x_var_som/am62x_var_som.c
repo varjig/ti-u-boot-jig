@@ -218,6 +218,7 @@ int board_late_init(void)
 
 #ifdef CONFIG_TI_AM65_CPSW_NUSS
 	var_setup_mac(ep);
+	var_eth_get_rgmii_id_quirk(ep);
 #endif
 
 	return 0;
