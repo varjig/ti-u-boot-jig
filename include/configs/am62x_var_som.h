@@ -178,7 +178,7 @@
 	"name_kern=Image\0"						\
 	"console=ttyS0,115200n8\0"					\
 	"args_all=run ramsize_check; setenv optargs ${optargs} "				\
-		"earlycon=ns16550a,mmio32,0x02800000 ${mtdparts} ${cma_size}\0"	\
+		"earlycon=ns16550a,mmio32,0x02800000 ${mtdparts} ${cma_size} ${var_rgmii_id_quirk}\0"	\
 	"ramsize_check="\
 		"if test $sdram_size -le 512; then " \
 			"setenv cma_size cma=180M; " \
