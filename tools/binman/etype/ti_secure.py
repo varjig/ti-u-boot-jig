@@ -16,7 +16,7 @@ class Firewall():
     id: int
     region: int
     control : int
-    permissions: list[hex]
+    permissions: list
     start_address: str
     end_address: str
 
