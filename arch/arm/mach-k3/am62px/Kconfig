@@ -27,8 +27,27 @@ config TARGET_AM62P5_R5_EVM
 	select BINMAN
 	imply SYS_K3_SPL_ATF
 
+config TARGET_AM62P5_A53_VAR_SOM
+	bool "Varisite VAR-SOM-AM62P running on A53"
+	select ARM64
+	select BINMAN
+	select OF_SYSTEM_SETUP
+	imply TI_COMMON_CMD_OPTIONS
+
+config TARGET_AM62P5_R5_VAR_SOM
+	bool "Varisite VAR-SOM-AM62P running on R5"
+	select CPU_V7R
+	select SYS_THUMB_BUILD
+	select K3_LOAD_SYSFW
+	select RAM
+	select SPL_RAM
+	select K3_DDRSS
+	select BINMAN
+	imply SYS_K3_SPL_ATF
+
 endchoice
 
 source "board/ti/am62px/Kconfig"
+source "board/variscite/am62px_var_som/Kconfig"
 
 endif

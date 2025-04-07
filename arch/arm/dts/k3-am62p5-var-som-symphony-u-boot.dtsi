@@ -1,0 +1,141 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Common AM62Px EVM dts file for SPLs
+ * Copyright (C) 2022 Texas Instruments Incorporated - https://www.ti.com/
+ * Copyright (C) 2025 Variscite Ltd. - https://www.variscite.com/
+ */
+
+#include "k3-am62p-var-som-symphony-binman.dtsi"
+
+/ {
+	chosen {
+		stdout-path = "serial2:115200n8";
+		tick-timer = &main_timer0;
+	};
+};
+
+&dmsc {
+	bootph-pre-ram;
+};
+
+&dss0 {
+	compatible = "ti,am625-dss";
+	clocks = <&k3_clks 186 6>,
+		 <&k3_clks 186 0>,
+		 <&k3_clks 186 2>;
+	ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+};
+
+&cpsw3g {
+	ethernet-ports {
+		bootph-all;
+	};
+};
+
+&cpsw3g_mdio {
+	bootph-all;
+};
+
+&cpsw3g_phy0 {
+	bootph-all;
+};
+
+
+&cpsw_port1 {
+	/* Variscite MAC addresses assigned by EEPROM/env */
+	/delete-property/ ti,syscon-efuse;
+	bootph-all;
+};
+
+&cpsw_port2 {
+	bootph-all;
+};
+
+&main_i2c0 {
+	bootph-all;
+};
+
+&main_i2c0_pins_default {
+	bootph-all;
+};
+
+&main_i2c1 {
+	bootph-all;
+};
+
+&main_i2c1_pins_default {
+	bootph-all;
+};
+
+&main_i2c2 {
+	bootph-all;
+};
+
+&main_i2c2_pins_default {
+	bootph-all;
+};
+
+&main_i2c3 {
+	/delete-property/ power-domains;
+	bootph-all;
+};
+
+&main_i2c3_pins_default {
+	bootph-all;
+};
+
+&main_gpio0 {
+	bootph-all;
+};
+
+&main_rgmii1_pins_default {
+	bootph-all;
+};
+
+&main_mdio1_pins_default {
+	bootph-all;
+};
+
+&phy_gmii_sel {
+	bootph-all;
+};
+
+&main_pktdma {
+	bootph-all;
+};
+
+/* Required for USB DFU Boot */
+&usb0 {
+	/* Enable peripheral mode only during bootup
+	 * to support DFU while allowing Linux to stay
+	 * in OTG mode
+	 */
+	dr_mode = "peripheral";
+	bootph-pre-ram;
+};
+
+/* Required for USB DFU Boot */
+&usb0_phy_ctrl {
+	bootph-pre-ram;
+};
+
+&usb1 {
+	bootph-all;
+};
+
+/* Required for USB DFU Boot */
+&usbss0 {
+	bootph-pre-ram;
+};
+
+&usbss1 {
+	bootph-all;
+};
+
+&wkup_conf {
+	cpsw_mac_syscon: ethernet-mac-syscon@200 {
+		compatible = "ti,am62p-cpsw-mac-efuse", "syscon";
+		reg = <0x200 0x8>;
+		bootph-all;
+	};
+};

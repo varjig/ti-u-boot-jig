@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: GPL-2.0+
+#
+# Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
+# Copyright 2025 Variscite Ltd. - https://www.variscite.com/
+#
+
+if TARGET_AM62P5_R5_VAR_SOM || TARGET_AM62P5_A53_VAR_SOM
+
+config SYS_BOARD
+       default "am62px_var_som"
+
+config SYS_VENDOR
+       default "variscite"
+
+config SYS_CONFIG_NAME
+       default "am62px_var_som"
+
+source "board/ti/common/Kconfig"
+
+endif
+
+if TARGET_AM62P5_R5_VAR_SOM
+
+config SPL_LDSCRIPT
+	default "arch/arm/mach-omap2/u-boot-spl.lds"
+
+endif

@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * AM62P5 SK dts file for R5 SPL
+ * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
+ * Copyright (C) 2025 Variscite Ltd. - https://www.variscite.com/
+ */
+
+#include "k3-am62p5-var-som-symphony.dts"
+#include "k3-am62p-ddr-lp4-50-1600.dtsi"
+#include "k3-am62a-ddr.dtsi"
+
+#include "k3-am62p5-var-som-symphony-u-boot.dtsi"
+#include "k3-am62p5-r5-var-som.dtsi"
+
+/* WKUP UART0 is used for DM firmware logs */
+&wkup_uart0 {
+	status = "okay";
+};
+
+/* Main UART1 is used for TIFS firmware logs */
+&main_uart1 {
+	status = "okay";
+};
+
