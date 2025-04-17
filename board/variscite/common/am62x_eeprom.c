@@ -245,7 +245,7 @@ int var_eeprom_ddr_table_is_valid(struct var_eeprom *ep)
 	return ddr_table_is_valid;
 }
 
-static void var_eeprom_adjust_ddr_u32(const char * name, const u32 * ep_val, u32 * dt_val) {
+static void var_eeprom_adjust_ddr_u32(const char * name, u32 * dt_val, const u32 * ep_val) {
 	if (*ep_val != *dt_val)
 	{
 		debug("%s: adjusting %s from %d to %d\n", __func__, name, *dt_val, *ep_val);
