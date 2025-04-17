@@ -93,7 +93,7 @@
 	phy-supply = <&vdd_phy_3v3>;
 	phy-reset-gpios = <&main_gpio0 46 GPIO_ACTIVE_LOW>;
 	phy-reset-duration = <10>;
-	phy-reset-post-delay = <20>;
+	phy-reset-post-delay = <100>;
 	phy-mode = "rgmii";
 	phy-handle = <&cpsw3g_phy0>;
 	status = "okay";

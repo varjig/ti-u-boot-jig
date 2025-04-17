@@ -69,7 +69,7 @@
 	phy-handle = <&cpsw3g_phy1>;
 	phy-reset-gpios = <&pca9534 5 GPIO_ACTIVE_LOW>;
 	phy-reset-duration = <10>;
-	phy-reset-post-delay = <20>;
+	phy-reset-post-delay = <100>;
 };
 
 &main_i2c0 {
