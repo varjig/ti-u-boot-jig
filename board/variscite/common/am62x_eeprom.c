@@ -150,7 +150,11 @@ void var_eeprom_print_prod_info(struct var_eeprom *ep)
 	/* Read second part of P/N  */
 	memcpy(partnum + sizeof(ep->partnum), ep->partnum2, sizeof(ep->partnum2));
 
+#if defined(CONFIG_SOC_K3_AM625)
 	printf("\nPart number: VSM-AM62-%.*s\n", (int)sizeof(partnum), partnum);
+#else
+	printf("\nPart number: VSM-AM62P-%.*s\n", (int)sizeof(partnum), partnum);
+#endif
 	printf("Assembly: AS%.*s\n", (int)sizeof(ep->assembly), (char *)ep->assembly);
 
 	printf("Production date: %.*s %.*s %.*s\n",
