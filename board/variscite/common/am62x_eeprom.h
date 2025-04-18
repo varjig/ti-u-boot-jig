@@ -89,6 +89,7 @@ struct __attribute__((packed)) var_carrier_eeprom
 };
 
 int var_eeprom_read_header(struct var_eeprom *e);
+int read_eeprom_header(void);
 int var_eeprom_get_dram_size(struct var_eeprom *e, uint64_t *size);
 int var_eeprom_get_mac(struct var_eeprom *e, u8 *mac);
 int var_eeprom_is_valid(struct var_eeprom *ep);

@@ -25,6 +25,23 @@ int var_eeprom_is_valid(struct var_eeprom *ep)
 	return 1;
 }
 
+int read_eeprom_header(void) {
+	struct var_eeprom *ep = VAR_EEPROM_DATA;
+	struct var_eeprom eeprom = {0};
+	int ret = 0;
+
+	if (!var_eeprom_is_valid(ep)) {
+		ret = var_eeprom_read_header(&eeprom);
+		if (ret) {
+			printf("%s EEPROM read failed.\n", __func__);
+			return -1;
+		}
+		memcpy(ep, &eeprom, sizeof(*ep));
+	}
+
+	return ret;
+}
+
 int var_eeprom_get_dram_size(struct var_eeprom *ep, uint64_t *size)
 {
 	/* No data in EEPROM - return default DRAM size */
