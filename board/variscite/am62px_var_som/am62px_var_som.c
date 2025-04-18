@@ -156,6 +156,9 @@ void spl_board_init(void)
 	enable_caches();
 	if (IS_ENABLED(CONFIG_SPL_SPLASH_SCREEN) && IS_ENABLED(CONFIG_SPL_BMP))
 		splash_display();
+
+	/* Init DRAM size for R5/A53 SPL */
+	dram_init_banksize();
 }
 #endif
 

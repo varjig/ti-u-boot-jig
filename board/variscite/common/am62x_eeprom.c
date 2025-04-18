@@ -195,7 +195,7 @@ void var_eeprom_print_prod_info(struct var_eeprom *ep)
 }
 #endif
 
-#if defined(CONFIG_K3_AM64_DDRSS)
+#if defined(CONFIG_K3_AM64_DDRSS) || defined(CONFIG_K3_AM62A_DDRSS)
 static int var_eeprom_crc32(struct var_eeprom *ep, const uint32_t offset,
 							const uint32_t len, uint32_t * crc32_val) {
 	uint32_t i;

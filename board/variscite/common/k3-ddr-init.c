@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
  * Copyright (C) 2023, Texas Instruments Incorporated - https://www.ti.com/
+ * Copyright (C) 2025, Variscite Ltd. - https://www.variscite.com/
  */
 
 #include <fdt_support.h>
@@ -9,27 +10,29 @@
 #include <spl.h>
 
 #include "k3-ddr-init.h"
+#include "am62x_eeprom.h"
+#include "am62x_dram.h"
 
 int dram_init(void)
 {
-	s32 ret;
+	int ret;
+
+	read_eeprom_header();
 
 	ret = fdtdec_setup_mem_size_base_lowest();
+
 	if (ret)
 		printf("Error setting up mem size and base. %d\n", ret);
+	else
+		/* Override fdtdec_setup_mem_size_base_lowest with memory size from EEPROM */
+		ret = var_dram_init_mem_size_base();
 
 	return ret;
 }
 
 int dram_init_banksize(void)
 {
-	s32 ret;
-
-	ret = fdtdec_setup_memory_banksize();
-	if (ret)
-		printf("Error setting up memory banksize. %d\n", ret);
-
-	return ret;
+	return var_dram_init_banksize();
 }
 
 #if defined(CONFIG_SPL_BUILD)
