@@ -188,9 +188,9 @@ void var_eeprom_print_prod_info(struct var_eeprom *ep)
 	debug("SOM features: 0x%x\n", ep->features);
 	printf("SOM revision: %d.%d\n", (int)SOMREV_MAJOR(ep->somrev), (int)SOMREV_MINOR(ep->somrev));
 	if (ep->dramsize < 8)
-		printf("DRAM size: %d MiB\n", ep->dramsize * 128);
+		debug("DRAM size: %d MiB\n", ep->dramsize * 128);
 	else
-		printf("DRAM size: %d GiB\n", (ep->dramsize * 128) / 1024);
+		debug("DRAM size: %d GiB\n", (ep->dramsize * 128) / 1024);
 	printf("DRAM PN: VIC%04d\n\n", ep->ddr_partnum);
 }
 #endif
